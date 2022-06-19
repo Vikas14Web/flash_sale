@@ -1,0 +1,113 @@
+parameters:
+  openapi.security:
+    admin:
+      includes:
+        - { path: ^\/v1\/admin, scopes: [ ] }
+    shop:
+      includes:
+        - { path: ^\/v1\/shop, scopes: [ ] }
+
+nelmio_api_doc:
+  documentation:
+    info:
+      title: Appna Bazaar
+      description: This is an awesome app for your product flash sale!
+      version: 1.0.0
+    components:
+      parameters:
+        filter:
+          in: query
+          name: filter
+          schema:
+            $ref: '#/components/schemas/Filter'
+        page:
+          in: query
+          name: page
+          schema:
+            type: number
+        limit:
+          in: query
+          name: limit
+          schema:
+            type: number
+        username:
+          in: header
+          name: username
+          required: true
+          schema:
+            type: string
+      schemas:
+        ValidationFailedResponse:
+          description: Response for failed validation
+          type: object
+          properties:
+            status:
+              type: string
+              example: error
+            message:
+              type: string
+              example: Validation Failed
+            errors:
+              type: object
+              properties:
+                field1:
+                  type: array
+                  items:
+                    type: string
+                field2:
+                  type: array
+                  items:
+                    type: string
+        Filter:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterField'
+          example:
+            - [ { "columnField": "id","operator": "=","value": "61" } ]
+
+        FilterField:
+          type: object
+          properties:
+            columnField:
+              type: string
+              example: "id"
+            operator:
+              type: string
+              example: "="
+            value:
+              type: string
+              example: "61"
+        BigDecimal:
+          type: string
+          example: '0.000000234'
+        PaginationMeta:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            total:
+              type: integer
+              example: 100
+            limit:
+              type: integer
+              example: 10
+        InternalErrorResponse:
+          description: Response for Internal Error
+          type: object
+          properties:
+            status:
+              type: string
+              example: error
+            message:
+              type: string
+              example: Internal Error
+            errors:
+              type: object
+
+  areas: # to filter documented areas
+    default:
+      disable_default_routes: true
+      name_patterns: [ ^public.*$ ]
+    private:
+      name_patterns: [ ^private.*$ ]
